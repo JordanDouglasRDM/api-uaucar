@@ -1,13 +1,12 @@
 <?php
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class () extends Migration
-{
+return new class () extends Migration {
     /**
      * Run the migrations.
      */
@@ -16,9 +15,15 @@ return new class () extends Migration
         Schema::create('users', function (Blueprint $table): void {
             $table->id();
             $table->string('name');
+            $table->string('level')->default('operator');
             $table->string('email')->unique();
+            $table->unsignedBigInteger('tenant_id');
+            $table->foreign('tenant_id')->references('id')->on('tenants');
+
             $table->string('password');
             $table->timestamps();
+
+            $table->unique(['email', 'tenant_id']);
         });
 
         Schema::create('password_reset_tokens', function (Blueprint $table): void {

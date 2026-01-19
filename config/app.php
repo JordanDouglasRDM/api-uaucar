@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 return [
 
@@ -54,7 +54,9 @@ return [
     |
     */
 
-    'url' => env('APP_URL', 'http://localhost'),
+    'url' => $url = env('APP_URL', 'http://localhost'),
+
+    'host' => parse_url($url, PHP_URL_HOST),
 
     /*
     |--------------------------------------------------------------------------

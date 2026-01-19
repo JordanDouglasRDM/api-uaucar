@@ -1,12 +1,13 @@
 <?php
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use OwenIt\Auditing\Contracts\Auditable;
@@ -29,6 +30,8 @@ class User extends Authenticatable implements Auditable, JWTSubject
         'name',
         'email',
         'password',
+        'tenant_id',
+        'level',
     ];
 
     /**
@@ -50,6 +53,13 @@ class User extends Authenticatable implements Auditable, JWTSubject
         return [
             'password' => 'hashed',
         ];
+    }
+
+    public const array LEVELS_ALLOWED = ['master', 'manager', 'operator', 'seller'];
+
+    public function tenant(): BelongsTo
+    {
+        return $this->belongsTo(Tenant::class);
     }
 
     public function getJWTIdentifier()

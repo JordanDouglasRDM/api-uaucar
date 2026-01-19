@@ -4,6 +4,7 @@ declare(strict_types = 1);
 
 namespace Database\Factories;
 
+use App\Models\Tenant;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Hash;
@@ -29,6 +30,8 @@ class UserFactory extends Factory
             'name'     => fake()->name(),
             'email'    => fake()->unique()->safeEmail(),
             'password' => static::$password ??= Hash::make('#Password@123'),
+            'level'    => fake()->randomElement(User::LEVELS_ALLOWED),
+            'tenant_id' => Tenant::first()->id ?? 1
         ];
     }
 }
