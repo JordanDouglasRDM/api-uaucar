@@ -1,19 +1,23 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace App\Mail;
 
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
-use Illuminate\Mail\Mailables\Content;
-use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
 class PasswordResetMail extends Mailable implements ShouldQueue
 {
-    use Queueable, SerializesModels;
+    use Queueable;
+    use SerializesModels;
+
     protected readonly string $url;
+
     protected readonly ?string $logoUrl;
+
     protected readonly ?string $firmName;
 
     /**
@@ -21,8 +25,8 @@ class PasswordResetMail extends Mailable implements ShouldQueue
      */
     public function __construct(string $url, ?string $logoUrl, ?string $firmName)
     {
-        $this->url = $url;
-        $this->logoUrl = $logoUrl ? url($logoUrl) : null;
+        $this->url      = $url;
+        $this->logoUrl  = $logoUrl ? url($logoUrl) : null;
         $this->firmName = $firmName;
     }
 
@@ -35,11 +39,12 @@ class PasswordResetMail extends Mailable implements ShouldQueue
     {
         $appName = config('app.name');
         $subject = "Recuperação de Senha - $appName";
+
         return $this->view('mail.password-reset')
             ->with([
-                'url' => $this->url,
-                'logoUrl' => $this->logoUrl,
-                'firmName' => $this->firmName
+                'url'      => $this->url,
+                'logoUrl'  => $this->logoUrl,
+                'firmName' => $this->firmName,
             ])
             ->subject($subject)
             ->onQueue('emails');

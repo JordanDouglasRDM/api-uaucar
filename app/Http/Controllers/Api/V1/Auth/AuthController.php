@@ -65,22 +65,25 @@ class AuthController extends Controller
 
     public function passwordForgot(PasswordForgotLinkRequest $request): JsonResponse
     {
-        $data = $request->validated();
+        $data            = $request->validated();
         $serviceResponse = $this->authService->passwordForgot($data);
+
         return ResponseFormatter::format($serviceResponse);
     }
 
     public function passwordReset(PasswordResetUnauthenticatedRequest $request): JsonResponse
     {
-        $data = $request->validated();
+        $data            = $request->validated();
         $serviceResponse = $this->authService->passwordReset($data);
+
         return ResponseFormatter::format($serviceResponse);
     }
 
     public function updatePassword(PasswordResetAuthenticatedRequest $request): JsonResponse
     {
-        $data = $request->validated();
+        $data            = $request->validated();
         $serviceResponse = $this->authService->updatePassword($data);
+
         return ResponseFormatter::format($serviceResponse);
     }
 }

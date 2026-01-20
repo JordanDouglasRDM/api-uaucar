@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace App\Http\Requests\Auth;
 
 use Illuminate\Contracts\Validation\Validator;
@@ -36,7 +38,7 @@ class PasswordResetAuthenticatedRequest extends FormRequest
         throw new HttpResponseException(response()->json([
             'status'  => 'error',
             'message' => 'Os dados fornecidos são inválidos',
-            'errors'   => $validator->errors(),
+            'errors'  => $validator->errors(),
         ], 422));
     }
 }

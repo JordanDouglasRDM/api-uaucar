@@ -39,7 +39,7 @@ class LoginUserRequest extends FormRequest
         throw new HttpResponseException(response()->json([
             'status'  => 'error',
             'message' => 'Os dados fornecidos são inválidos!',
-            'errors'   => $validator->errors(),
+            'errors'  => $validator->errors(),
         ], 422));
     }
 }

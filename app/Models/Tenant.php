@@ -1,14 +1,16 @@
 <?php
 
-namespace App\Models;
+declare(strict_types = 1);
 
+namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Tenant extends BaseModel
 {
-    use hasFactory;
+    use HasFactory;
+
     protected $fillable = [
         'domain',
         'name',
