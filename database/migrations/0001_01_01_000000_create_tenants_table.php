@@ -18,6 +18,7 @@ return new class () extends Migration
 
             $table->string('domain', 100)->unique()->nullable(false);
             $table->string('name', 100);
+            $table->string('status')->default('active');
             $table->string('cnpj', 14)->nullable();
             $table->string('logo', 255)->nullable();
             $table->string('administrator_email', 100)->nullable();

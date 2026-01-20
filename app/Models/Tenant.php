@@ -14,6 +14,7 @@ class Tenant extends BaseModel
     protected $fillable = [
         'domain',
         'name',
+        'status',
         'cnpj',
         'logo',
         'administrator_email',
@@ -23,6 +24,11 @@ class Tenant extends BaseModel
         'responsible_phone',
         'options',
     ];
+
+    public function isActive(): bool
+    {
+        return $this->status === 'active';
+    }
 
     public function users(): HasMany
     {

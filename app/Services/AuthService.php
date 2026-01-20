@@ -27,12 +27,18 @@ class AuthService
     public function login(array $credentials, Request $request): ServiceResponse
     {
         try {
+            $tenant = $request->attributes->get('tenant');
+
             if (! $token = auth()->attempt($credentials)) {
                 throw new UnauthorizedException('Usuário ou senha inválidos.');
             }
 
             /** @var Authenticatable $user */
             $user = auth()->user();
+
+            if (! $user->belongsToTenant($tenant)) {
+                throw new UnauthorizedException('Usuário não pertence ao tenant.');
+            }
 
             $deviceId      = Uuid::uuid4()->toString();
             $tokenUnhashed = Uuid::uuid4()->toString();
