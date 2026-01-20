@@ -5,11 +5,13 @@ declare(strict_types=1);
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Mail\PasswordResetMail;
 use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Mail;
 use OwenIt\Auditing\Contracts\Auditable;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 
@@ -65,6 +67,27 @@ class User extends Authenticatable implements Auditable, JWTSubject
     public function getJWTIdentifier()
     {
         return $this->getKey();
+    }
+
+    public function sendPasswordResetNotification($token): void
+    {
+        $domain = $this->tenant->domain === 'localhost' ? 'localhost:5173' : $this->tenant->domain;
+        $url = sprintf(
+            '%s://%s/reset-password/%s?%s',
+            app()->isProduction() ? 'https' : 'http',
+            $domain,
+            $token,
+            http_build_query(['email' => $this->email])
+        );
+
+        $logoUrl = $this->tenant->logo ?? null;
+        $firmName = $this->tenant->name;
+
+        Mail::to($this->email)->send(new PasswordResetMail(
+            $url,
+            $logoUrl,
+            $firmName
+        ));
     }
 
     /**

@@ -7,8 +7,15 @@ namespace App\Services;
 use App\Exceptions\UnauthorizedException;
 use App\Http\Utilities\ServiceResponse;
 use App\Models\RefreshToken;
+use App\Models\User;
+use Exception;
+use Illuminate\Auth\AuthenticationException;
 use Illuminate\Contracts\Auth\Authenticatable;
+use Illuminate\Contracts\Auth\PasswordBroker;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Password;
 use Ramsey\Uuid\Uuid;
 use Throwable;
 
@@ -46,6 +53,7 @@ class AuthService
             );
 
             $model = [
+                'user' => $user,
                 'access_token' => $token,
                 'token_type'   => 'bearer',
                 'device_token' => $deviceToken,
@@ -75,8 +83,84 @@ class AuthService
             return ServiceResponse::error($e);
         }
     }
+    public function passwordForgot(array $data): ServiceResponse
+    {
+        try {
+            $status = $this->broker()->sendResetLink($data);
 
-    public function logged(): ServiceResponse
+            if ($status !== Password::RESET_LINK_SENT) {
+                $excep = new Exception('Não foi possível realizar o envio do e-mail.');
+                return ServiceResponse::error($excep, 400);
+            }
+            return ServiceResponse::success(null, 'Foi enviado um e-mail com link de recuperação.');
+        } catch (Exception $e) {
+            return ServiceResponse::error($e);
+        }
+    }
+
+    public function passwordReset(array $data): ServiceResponse
+    {
+        try {
+            $status = $this->broker()->reset($data,
+                function ($user, $password) {
+                    $user = User::find($user->id);
+                    $result = $user->update([
+                        'password' => Hash::make($password),
+                    ]);
+
+                    if (!$result) {
+                        throw new \Exception('Falha ao atualizar senha');
+                    }
+
+                });
+            if ($status !== Password::PASSWORD_RESET) {
+                $excep = new Exception('Não foi possível atualizar a senha.');
+                return ServiceResponse::error($excep, 400);
+            }
+            return ServiceResponse::success(['redirect' => url('login')], 'Senha atualizada com sucesso, realize o login.');
+        } catch (Exception $e) {
+            return ServiceResponse::error($e);
+        }
+    }
+
+    public function updatePassword(array $data): ServiceResponse
+    {
+        try {
+            $user = Auth::user();
+
+            $credentials = [
+                'password' => $data['current_password'],
+                'email' => $user->email,
+            ];
+
+            if (!Auth::validate($credentials)) {
+                throw new AuthenticationException('Senha atual incorreta.');
+            }
+
+            $result = $user->update(['password' => ($data['new_password'])]);
+            if (!$result) {
+                throw new \Exception('Houve um erro ao atualizar a senha.');
+            }
+
+            auth()->logout();
+
+            return ServiceResponse::success(['redirect' => url('login')], 'Senha atualizada com sucesso.');
+        } catch (AuthenticationException $e) {
+            return ServiceResponse::error($e, 401);
+        } catch (Exception $e) {
+            return ServiceResponse::error($e);
+        }
+    }
+
+
+
+    private function broker(): PasswordBroker
+    {
+        return Password::broker('users');
+    }
+
+
+    public function me(): ServiceResponse
     {
         try {
             if (! auth()->check()) {

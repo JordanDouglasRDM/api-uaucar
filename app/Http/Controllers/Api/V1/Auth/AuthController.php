@@ -7,6 +7,9 @@ namespace App\Http\Controllers\Api\V1\Auth;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginUserRequest;
 use App\Http\Requests\Auth\LogoutAuthRequest;
+use App\Http\Requests\Auth\PasswordForgotLinkRequest;
+use App\Http\Requests\Auth\PasswordResetAuthenticatedRequest;
+use App\Http\Requests\Auth\PasswordResetUnauthenticatedRequest;
 use App\Http\Utilities\ResponseFormatter;
 use App\Services\AuthService;
 use Illuminate\Http\JsonResponse;
@@ -32,9 +35,9 @@ class AuthController extends Controller
     /**
      * Retorna os dados do usuário autenticado.
      */
-    public function logged(): JsonResponse
+    public function me(): JsonResponse
     {
-        $serviceResponse = $this->authService->logged();
+        $serviceResponse = $this->authService->me();
 
         return ResponseFormatter::format($serviceResponse);
     }
@@ -57,6 +60,27 @@ class AuthController extends Controller
     {
         $serviceResponse = $this->authService->refreshToken($request);
 
+        return ResponseFormatter::format($serviceResponse);
+    }
+
+    public function passwordForgot(PasswordForgotLinkRequest $request): JsonResponse
+    {
+        $data = $request->validated();
+        $serviceResponse = $this->authService->passwordForgot($data);
+        return ResponseFormatter::format($serviceResponse);
+    }
+
+    public function passwordReset(PasswordResetUnauthenticatedRequest $request): JsonResponse
+    {
+        $data = $request->validated();
+        $serviceResponse = $this->authService->passwordReset($data);
+        return ResponseFormatter::format($serviceResponse);
+    }
+
+    public function updatePassword(PasswordResetAuthenticatedRequest $request): JsonResponse
+    {
+        $data = $request->validated();
+        $serviceResponse = $this->authService->updatePassword($data);
         return ResponseFormatter::format($serviceResponse);
     }
 }

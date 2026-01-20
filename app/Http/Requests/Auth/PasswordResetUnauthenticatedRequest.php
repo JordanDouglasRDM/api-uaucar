@@ -1,19 +1,17 @@
 <?php
 
-declare(strict_types = 1);
-
 namespace App\Http\Requests\Auth;
 
-use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
-use Override;
 
-class LoginUserRequest extends FormRequest
+class PasswordResetUnauthenticatedRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
+     *
+     * @return bool
      */
     public function authorize(): bool
     {
@@ -23,22 +21,22 @@ class LoginUserRequest extends FormRequest
     /**
      * Get the validation rules that apply to the request.
      *
-     * @return array<string, ValidationRule|array<mixed>|string>
+     * @return array
      */
     public function rules(): array
     {
         return [
+            'token'    => 'required|string',
             'email'    => 'required|email',
-            'password' => 'required|string|min:8',
+            'password' => 'required|confirmed',
         ];
     }
 
-    #[Override]
     protected function failedValidation(Validator $validator)
     {
         throw new HttpResponseException(response()->json([
             'status'  => 'error',
-            'message' => 'Os dados fornecidos são inválidos!',
+            'message' => 'Os dados fornecidos são inválidos',
             'errors'   => $validator->errors(),
         ], 422));
     }

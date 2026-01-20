@@ -39,7 +39,7 @@ class LogoutAuthRequest extends FormRequest
         throw new HttpResponseException(response()->json([
             'status'  => 'error',
             'message' => 'Os dados fornecidos são inválidos!',
-            'error'   => $validator->errors(),
+            'errors'   => $validator->errors(),
         ], 422));
     }
 }
