@@ -24,8 +24,8 @@ class Authenticate
      */
     public function handle(Request $request, Closure $next, string ...$guards): Response
     {
-        $guard  = $guards[0] ?? 'api';
-        $auth   = Auth::guard($guard);
+        $guard = $guards[0] ?? 'api';
+        $auth  = Auth::guard($guard);
         /** @var Tenant $tenant*/
         $tenant = $request->attributes->get('tenant');
 
@@ -46,7 +46,6 @@ class Authenticate
             }
 
             return $next($request);
-
         } catch (UnauthorizedException $e) {
             return $this->unauthorized($e, $e->getMessage());
         } catch (Throwable $e) {

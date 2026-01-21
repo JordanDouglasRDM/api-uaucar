@@ -112,7 +112,7 @@ class AuthService
         try {
             $status = $this->broker()->reset(
                 $data,
-                function ($user, $password) {
+                function ($user, $password): void {
                     $user   = User::find($user->id);
                     $result = $user->update([
                         'password' => Hash::make($password),

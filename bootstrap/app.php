@@ -19,11 +19,11 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->group('api', [
             SubstituteBindings::class,
-            'tenant'
+            'tenant',
         ]);
 
         $middleware->alias([
-            'auth' => Authenticate::class,
+            'auth'   => Authenticate::class,
             'tenant' => ResolveTenantMiddleware::class,
         ]);
     })

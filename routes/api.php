@@ -3,6 +3,7 @@
 declare(strict_types = 1);
 
 use App\Http\Controllers\Api\V1\Auth\AuthController;
+use App\Http\Controllers\Api\V1\Vehicles\VehicleController;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('v1')
@@ -21,6 +22,9 @@ Route::prefix('v1')
                 Route::get('/me', [AuthController::class, 'me']);
                 Route::post('/logout', [AuthController::class, 'logout']);
                 Route::post('/password/reset', [AuthController::class, 'updatePassword']);//atualiza senha auth
+
+                Route::post('/vehicles', [VehicleController::class, 'store']);
+                Route::post('/vehicles/{vehicle}', [VehicleController::class, 'update']);
             });
         });
     });

@@ -14,26 +14,18 @@ class PasswordResetMail extends Mailable implements ShouldQueue
     use Queueable;
     use SerializesModels;
 
-    protected readonly string $url;
-
     protected readonly ?string $logoUrl;
-
-    protected readonly ?string $firmName;
 
     /**
      * Create a new message instance.
      */
-    public function __construct(string $url, ?string $logoUrl, ?string $firmName)
+    public function __construct(protected readonly string $url, ?string $logoUrl, protected readonly ?string $firmName)
     {
-        $this->url      = $url;
-        $this->logoUrl  = $logoUrl ? url($logoUrl) : null;
-        $this->firmName = $firmName;
+        $this->logoUrl = $logoUrl ? url($logoUrl) : null;
     }
 
     /**
      * Build the message.
-     *
-     * @return $this
      */
     public function build(): PasswordResetMail
     {

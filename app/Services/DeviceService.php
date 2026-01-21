@@ -11,7 +11,7 @@ class DeviceService
     public static function getDeviceName(?string $userAgent): string
     {
         $agent = new Agent();
-        $agent->setUserAgent($userAgent !== null && $userAgent !== '' && $userAgent !== '0' ? $userAgent : 'unknown');
+        $agent->setUserAgent(in_array($userAgent, [null, '', '0'], true) ? 'unknown' : $userAgent);
 
         $device      = $agent->device() ?: '';
         $deviceEmpty = ':';
