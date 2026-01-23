@@ -1,8 +1,9 @@
 <?php
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 use App\Http\Controllers\Api\V1\Auth\AuthController;
+use App\Http\Controllers\Api\V1\TenantController;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('v1')
@@ -21,6 +22,11 @@ Route::prefix('v1')
                 Route::get('/me', [AuthController::class, 'me']);
                 Route::post('/logout', [AuthController::class, 'logout']);
                 Route::post('/password/reset', [AuthController::class, 'updatePassword']);//atualiza senha auth
+
             });
+        });
+        Route::middleware(['auth:api', 'can:manage-system'])->group(function (): void {
+            Route::resource('tenants', TenantController::class)
+                ->except(['create', 'edit']);
         });
     });
