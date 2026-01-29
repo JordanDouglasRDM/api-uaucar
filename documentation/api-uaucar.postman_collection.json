@@ -1,0 +1,248 @@
+{
+  "info": {
+    "_postman_id": "832f5827-fc99-4bf5-bee8-daf6e1da6c7f",
+    "name": "api-uaucar",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "29018492"
+  },
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code é 200\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  "\r",
+                  "if (pm.response.code === 200) {\r",
+                  "    const res = pm.response.json();\r",
+                  "    if (res.data) {\r",
+                  "        pm.environment.set(\"accessToken\", res.data.access_token);\r",
+                  "        pm.environment.set(\"deviceToken\", res.data.device_token);\r",
+                  "    }\r",
+                  "    \r",
+                  "    const refreshCookie = pm.cookies.get(\"refresh_token\");\r",
+                  "    if (refreshCookie) {\r",
+                  "        pm.environment.set(\"refreshToken\", refreshCookie);\r",
+                  "    }\r",
+                  "}\r",
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{accessToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "email",
+                  "value": "jordandouglas8515@gmail.com",
+                  "type": "text",
+                  "uuid": "c994d768-881a-4f62-9e2c-4ed90e557f8a"
+                },
+                {
+                  "key": "password",
+                  "value": "{{senha}}",
+                  "type": "text",
+                  "uuid": "3ab469ef-51ae-40f6-809e-df7d0abc7774"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{local-api}}/v1/auth/login",
+              "host": [
+                "{{local-api}}"
+              ],
+              "path": [
+                "v1",
+                "auth",
+                "login"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "logged",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{accessToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "email",
+                  "value": "jordandouglas8515@gmail.com",
+                  "type": "text",
+                  "uuid": "c994d768-881a-4f62-9e2c-4ed90e557f8a"
+                },
+                {
+                  "key": "password",
+                  "value": "{{senha}}",
+                  "type": "text",
+                  "uuid": "3ab469ef-51ae-40f6-809e-df7d0abc7774"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{local-api}}/v1/auth/me",
+              "host": [
+                "{{local-api}}"
+              ],
+              "path": [
+                "v1",
+                "auth",
+                "me"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "logout",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{accessToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "device_token",
+                  "value": "{{deviceToken}}",
+                  "type": "text",
+                  "uuid": "7b20997f-d495-417a-8286-10a0ecf5e03a"
+                },
+                {
+                  "key": "device_token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWUsImlhdCI6MTUxNjIzOTAyMn0.KMUFsIDTnFmyG3nMiGM6H9FNFUROf3wh7SmqJp-QV30",
+                  "type": "text",
+                  "uuid": "7b20997f-d495-417a-8286-10a0ecf5e03a",
+                  "disabled": true
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{local-api}}/v1/auth/logout",
+              "host": [
+                "{{local-api}}"
+              ],
+              "path": [
+                "v1",
+                "auth",
+                "logout"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "refresh-token",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code é 200\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  "\r",
+                  "if (pm.response.code === 200) {\r",
+                  "    const res = pm.response.json();\r",
+                  "    if (res.data) {\r",
+                  "        pm.environment.set(\"accessToken\", res.data.access_token);\r",
+                  "    }\r",
+                  "    \r",
+                  "    const refreshCookie = pm.cookies.get(\"refresh_token\");\r",
+                  "    if (refreshCookie) {\r",
+                  "        pm.environment.set(\"refreshToken\", refreshCookie);\r",
+                  "    }\r",
+                  "}\r",
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": []
+            },
+            "url": {
+              "raw": "{{local-api}}/v1/auth/refresh-token",
+              "host": [
+                "{{local-api}}"
+              ],
+              "path": [
+                "v1",
+                "auth",
+                "refresh-token"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}

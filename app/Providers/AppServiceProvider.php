@@ -1,10 +1,12 @@
 <?php
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace App\Providers;
 
+use App\Models\User;
 use Carbon\CarbonImmutable;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\DB;
@@ -33,7 +35,40 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        $this->registerAuthorizationGates();
+    }
+
+    /**
+     * Registro centralizado dos Gates de autorização.
+     */
+    private function registerAuthorizationGates(): void
+    {
+        $hierarchy = [
+            'master'   => 1,
+            'manager'  => 2,
+            'operator' => 3,
+            'seller'   => 4,
+        ];
+
+        Gate::define('level-at-least', function (User $user, string $required) use ($hierarchy) {
+            return $hierarchy[$user->level] <= $hierarchy[$required];
+        });
+
+        Gate::define('manage-system', fn(User $user) =>
+            Gate::forUser($user)->allows('level-at-least', 'master')
+        );
+
+        Gate::define('manage-users', fn(User $user) =>
+            Gate::forUser($user)->allows('level-at-least', 'manager')
+        );
+
+        Gate::define('operate-stock', fn(User $user) =>
+            Gate::forUser($user)->allows('level-at-least', 'operator')
+        );
+
+        Gate::define('sell', fn(User $user) =>
+            Gate::forUser($user)->allows('level-at-least', 'seller')
+        );
     }
 
     /**

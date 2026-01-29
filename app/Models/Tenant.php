@@ -12,6 +12,7 @@ class Tenant extends BaseModel
     use HasFactory;
 
     protected $fillable = [
+        'id',
         'domain',
         'name',
         'status',
@@ -23,6 +24,8 @@ class Tenant extends BaseModel
         'responsible_email',
         'responsible_phone',
         'options',
+        'created_at',
+        'updated_at',
     ];
 
     public function isActive(): bool
