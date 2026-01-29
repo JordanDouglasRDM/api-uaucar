@@ -34,23 +34,17 @@ return Application::configure(basePath: dirname(__DIR__))
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
-
-        $exceptions->render(function (
-            AuthorizationException $e,
-                                   $request
-        ) {
-            return ResponseFormatter::format(
-                ServiceResponse::error(
-                    throw: $e,
-                    status: Response::HTTP_FORBIDDEN,
-                    message: 'Esta ação não é autorizada.',
-                )
-            );
-        });
+        $exceptions->render(fn (AuthorizationException $e, $request): Illuminate\Http\JsonResponse => ResponseFormatter::format(
+            ServiceResponse::error(
+                throw: $e,
+                status: Response::HTTP_FORBIDDEN,
+                message: 'Esta ação não é autorizada.',
+            )
+        ));
         $exceptions->render(function (
             HttpExceptionInterface $e,
-                                   $request
-        ) {
+            $request
+        ): ?Illuminate\Http\JsonResponse {
             if ($request->is('api/*') || $request->expectsJson()) {
                 return ResponseFormatter::format(
                     ServiceResponse::error(
@@ -64,18 +58,12 @@ return Application::configure(basePath: dirname(__DIR__))
             return null;
         });
 
-        $exceptions->render(function (
-            UnauthorizedException $e,
-                                  $request
-        ) {
-            return ResponseFormatter::format(
-                ServiceResponse::error(
-                    throw: $e,
-                    status: Response::HTTP_UNAUTHORIZED,
-                    message: 'Esta ação não é autorizada.',
-                )
-            );
-        });
-
+        $exceptions->render(fn (UnauthorizedException $e, $request): Illuminate\Http\JsonResponse => ResponseFormatter::format(
+            ServiceResponse::error(
+                throw: $e,
+                status: Response::HTTP_UNAUTHORIZED,
+                message: 'Esta ação não é autorizada.',
+            )
+        ));
     })
     ->create();

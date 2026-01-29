@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
@@ -13,7 +15,6 @@ class TenantController extends Controller
 {
     public function __construct(protected TenantService $tenantService)
     {
-
     }
 
     /**
@@ -21,15 +22,16 @@ class TenantController extends Controller
      */
     public function index(IndexTenantRequest $request): JsonResponse
     {
-        $data = $request->validated();
+        $data            = $request->validated();
         $serviceResponse = $this->tenantService->index($data);
+
         return ResponseFormatter::format($serviceResponse);
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(Request $request): void
     {
         //
     }
@@ -37,7 +39,7 @@ class TenantController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(string $id): void
     {
         //
     }
@@ -45,7 +47,7 @@ class TenantController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, string $id): void
     {
         //
     }
@@ -53,7 +55,7 @@ class TenantController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(string $id): void
     {
         //
     }

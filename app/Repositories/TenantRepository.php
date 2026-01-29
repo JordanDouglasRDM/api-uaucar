@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace App\Repositories;
 
 use App\Models\Tenant;
@@ -7,25 +9,24 @@ use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
 class TenantRepository
 {
-
     public function __construct(protected Tenant $model)
     {
     }
 
-//    'id',
-//        'domain',
-//        'name',
-//        'status',
-//        'cnpj',
-//        'logo',
-//        'administrator_email',
-//        'administrator_phone',
-//        'responsible_name',
-//        'responsible_email',
-//        'responsible_phone',
-//        'options',
-//        'created_at',
-//        'updated_at',
+    //    'id',
+    //        'domain',
+    //        'name',
+    //        'status',
+    //        'cnpj',
+    //        'logo',
+    //        'administrator_email',
+    //        'administrator_phone',
+    //        'responsible_name',
+    //        'responsible_email',
+    //        'responsible_phone',
+    //        'options',
+    //        'created_at',
+    //        'updated_at',
 
     public function index(array $data): LengthAwarePaginator
     {
@@ -56,5 +57,4 @@ class TenantRepository
             ->paginate($data['per_page'])
             ->onEachSide(1);
     }
-
 }

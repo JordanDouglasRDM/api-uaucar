@@ -4,15 +4,20 @@ declare(strict_types = 1);
 
 namespace App\Services\Vehicles;
 
+use App\Http\Resources\VehicleResource;
 use App\Http\Utilities\ServiceResponse;
 use App\Models\Vehicle;
+use App\Repositories\Vehicle\VehicleRepository;
+use App\Traits\HelperTrait;
 use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\Auth;
 
 class VehicleService
 {
-    public function __construct(protected Vehicle $vehicle)
+    use HelperTrait;
+
+    public function __construct(protected Vehicle $vehicle, protected VehicleRepository $vehicleRepository)
     {
     }
 
@@ -48,6 +53,25 @@ class VehicleService
                 ['vehicle' => $vehicle->id],
                 message: 'Veículo atualizado com sucesso!'
             );
+        } catch (ModelNotFoundException $e) {
+            return ServiceResponse::error($e, 404, 'Recurso não encontrado.');
+        } catch (Exception $e) {
+            return ServiceResponse::error($e, 500, $e->getMessage());
+        }
+    }
+
+    /**
+     * @param array<string, mixed> $data
+     */
+    public function getAll(array $data): ServiceResponse
+    {
+        try {
+            $result      = $this->vehicleRepository->getAll($data);
+            $message     = $result->total() > 0 ? 'Registros encontrados' : 'Nenhum registro encontrado';
+            $resultItems = VehicleResource::collection($result);
+            $result      = $this->toPaginator($result, $resultItems);
+
+            return ServiceResponse::success($result, $message);
         } catch (ModelNotFoundException $e) {
             return ServiceResponse::error($e, 404, 'Recurso não encontrado.');
         } catch (Exception $e) {

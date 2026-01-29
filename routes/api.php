@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare(strict_types = 1);
 
 use App\Http\Controllers\Api\V1\Auth\AuthController;
 use App\Http\Controllers\Api\V1\TenantController;
@@ -22,15 +22,14 @@ Route::prefix('v1')
             Route::middleware('auth:api')->group(function (): void {
                 Route::get('/me', [AuthController::class, 'me']);
                 Route::post('/logout', [AuthController::class, 'logout']);
-                Route::post('/password/reset', [AuthController::class, 'updatePassword']);//atualiza senha auth
-
+                Route::post('/password/reset', [AuthController::class, 'updatePassword']); //atualiza senha auth
             });
         });
         Route::middleware(['auth:api', 'can:manage-system'])->group(function (): void {
             Route::resource('tenants', TenantController::class)
                 ->except(['create', 'edit']);
 
-            Route::post('/vehicles', [VehicleController::class, 'store']);
-            Route::post('/vehicles/{vehicle}', [VehicleController::class, 'update']);
+            Route::resource('vehicles', VehicleController::class)
+                ->only(['index', 'store', 'update']);
         });
     });

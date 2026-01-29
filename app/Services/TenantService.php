@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace App\Services;
 
 use App\Http\Resources\TenantResource;
@@ -11,6 +13,7 @@ use Throwable;
 class TenantService
 {
     use HelperTrait;
+
     public function __construct(protected TenantRepository $repository)
     {
     }
