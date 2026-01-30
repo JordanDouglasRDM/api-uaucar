@@ -37,10 +37,10 @@ return new class () extends Migration
             $table->string('transmissao');
 
             // Valores Financeiros
-            $table->decimal('preco_compra', 15, 2)->nullable();
-            $table->decimal('preco_venda', 15, 2);
+            $table->decimal('preco_compra', 15, 3)->nullable();
+            $table->decimal('preco_venda', 15, 3);
             $table->string('codigo_fipe')->nullable();
-            $table->decimal('valor_fipe', 15, 2)->nullable();
+            $table->decimal('valor_fipe', 15, 3)->nullable();
 
             // Conteúdo e Marketing
             $table->text('descricao')->nullable();

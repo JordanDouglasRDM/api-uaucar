@@ -1,10 +1,9 @@
 <?php
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Database\Seeders;
 
-// use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -17,7 +16,7 @@ class DatabaseSeeder extends Seeder
         $this->call([
             TenantSeeder::class,
             UserSeeder::class,
-            // VehicleSeeder::class,
+            VehicleSeeder::class,
         ]);
     }
 }

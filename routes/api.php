@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 use App\Http\Controllers\Api\V1\Auth\AuthController;
 use App\Http\Controllers\Api\V1\TenantController;
@@ -29,6 +29,9 @@ Route::prefix('v1')
             Route::resource('tenants', TenantController::class)
                 ->except(['create', 'edit']);
 
+        });
+
+        Route::middleware(['auth:api', 'can:operate-stock'])->group(function (): void {
             Route::resource('vehicles', VehicleController::class)
                 ->only(['index', 'store', 'update']);
         });

@@ -6,6 +6,10 @@ namespace App\Http\Requests\Vehicles;
 
 use App\Models\Vehicle;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Contracts\Validation\ValidationRule;
+use Illuminate\Contracts\Validation\Validator;
+use Override;
 
 class GetAllVehiclesRequest extends FormRequest
 {
@@ -20,7 +24,7 @@ class GetAllVehiclesRequest extends FormRequest
     /**
      * Get the validation rules that apply to the request.
      *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
+     * @return array<string, ValidationRule|array<mixed>|string>
      */
     public function rules(): array
     {
@@ -37,5 +41,14 @@ class GetAllVehiclesRequest extends FormRequest
             'filters.tipo'    => 'nullable|string|in:' . implode(',', Vehicle::tipoRouteEnum()),
             'filters.search'  => 'nullable|string|max:255',
         ];
+    }
+    #[Override]
+    protected function failedValidation(Validator $validator)
+    {
+        throw new HttpResponseException(response()->json([
+            'status'  => 'error',
+            'message' => 'Os dados fornecidos são inválidos!',
+            'errors'  => $validator->errors(),
+        ], 422));
     }
 }

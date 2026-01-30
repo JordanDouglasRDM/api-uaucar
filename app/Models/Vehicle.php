@@ -6,12 +6,14 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Vehicle extends Model
 {
     use HasFactory;
 
     protected $fillable = [
+        'id',
         'tenant_id',
         'user_id',
         'tipo',
@@ -32,6 +34,8 @@ class Vehicle extends Model
         'valor_fipe',
         'descricao',
         'atributos_adicionais',
+        'created_at',
+        'updated_at',
     ];
 
     protected $casts = [
@@ -51,5 +55,15 @@ class Vehicle extends Model
     public static function statusRouteEnum(): array
     {
         return ['disponivel', 'vendido', 'preparacao', 'reservado'];
+    }
+
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function tenant(): BelongsTo
+    {
+        return $this->belongsTo(Tenant::class);
     }
 }

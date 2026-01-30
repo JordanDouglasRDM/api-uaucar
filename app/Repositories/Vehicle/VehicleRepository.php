@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Auth;
 
 class VehicleRepository
 {
-    public function __construct(protected Vehicle $vehicle)
+    public function __construct(protected Vehicle $model)
     {
     }
 
@@ -19,27 +19,7 @@ class VehicleRepository
      */
     public function getAll(array $data): LengthAwarePaginator
     {
-        $query = $this->vehicle->query()->select([
-            'id',
-            'tipo',
-            'status',
-            'marca',
-            'modelo',
-            'ano_fabricacao',
-            'ano_modelo',
-            'placa',
-            'chassi',
-            'cor',
-            'quilometragem',
-            'tipo_combustivel',
-            'transmissao',
-            'preco_compra',
-            'preco_venda',
-            'codigo_fipe',
-            'valor_fipe',
-            'descricao',
-            'atributos_adicionais',
-        ]);
+        $query = $this->model->query();
         $query->where('tenant_id', Auth::user()->tenant_id);
 
         $filters = $data['filters'] ?? [];

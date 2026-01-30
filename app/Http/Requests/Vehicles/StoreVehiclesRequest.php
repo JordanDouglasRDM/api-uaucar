@@ -5,7 +5,10 @@ declare(strict_types = 1);
 namespace App\Http\Requests\Vehicles;
 
 use App\Models\Vehicle;
+use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Http\Exceptions\HttpResponseException;
+use Override;
 
 class StoreVehiclesRequest extends FormRequest
 {
@@ -52,4 +55,14 @@ class StoreVehiclesRequest extends FormRequest
             'atributos_adicionais' => 'nullable|array',
         ];
     }
+    #[Override]
+    protected function failedValidation(Validator $validator)
+    {
+        throw new HttpResponseException(response()->json([
+            'status'  => 'error',
+            'message' => 'Os dados fornecidos são inválidos!',
+            'errors'  => $validator->errors(),
+        ], 422));
+    }
+
 }

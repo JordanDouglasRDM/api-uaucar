@@ -9,6 +9,7 @@ use App\Mail\PasswordResetMail;
 use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Mail;
@@ -62,6 +63,11 @@ class User extends Authenticatable implements Auditable, JWTSubject
     public function tenant(): BelongsTo
     {
         return $this->belongsTo(Tenant::class);
+    }
+
+    public function vehicles(): HasMany
+    {
+        return $this->hasMany(Vehicle::class);
     }
 
     public function getJWTIdentifier()
