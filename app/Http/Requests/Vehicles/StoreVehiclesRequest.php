@@ -31,8 +31,8 @@ class StoreVehiclesRequest extends FormRequest
         $statusRouteEnum = implode(',', Vehicle::statusRouteEnum());
 
         return [
-            'tipo'   => "required|string|in:{$tipoRouteEnum}",
-            'status' => "nullable|string|in:{$statusRouteEnum}",
+            'tipo'   => 'required|string|in:' . $tipoRouteEnum,
+            'status' => 'nullable|string|in:' . $statusRouteEnum,
 
             'marca'          => 'required|string|max:100',
             'modelo'         => 'required|string|max:100',
@@ -55,6 +55,7 @@ class StoreVehiclesRequest extends FormRequest
             'atributos_adicionais' => 'nullable|array',
         ];
     }
+
     #[Override]
     protected function failedValidation(Validator $validator)
     {
@@ -64,5 +65,4 @@ class StoreVehiclesRequest extends FormRequest
             'errors'  => $validator->errors(),
         ], 422));
     }
-
 }

@@ -19,9 +19,10 @@ class DeviceService
         if (empty($device)) {
             $deviceEmpty = '';
         }
+
         $platform = $agent->platform() ?: 'Unknown OS';
         $browser  = $agent->browser() ?: 'Unknown Browser';
 
-        return trim("{$device}{$deviceEmpty} {$platform} - {$browser}");
+        return trim(sprintf('%s%s %s - %s', $device, $deviceEmpty, $platform, $browser));
     }
 }

@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace App\Http\Requests\Vehicles;
 
@@ -25,14 +25,14 @@ class UpdateVehiclesRequest extends FormRequest
     public function rules(): array
     {
         // Recuperamos o ID do veículo da rota para a regra de ignorar unique
-            $this->route('vehicle')->id ?? $this->route('vehicle');
+        $this->route('vehicle')->id ?? $this->route('vehicle');
 
-        $tipoRouteEnum = implode(',', Vehicle::tipoRouteEnum());
+        $tipoRouteEnum   = implode(',', Vehicle::tipoRouteEnum());
         $statusRouteEnum = implode(',', Vehicle::statusRouteEnum());
 
         return [
-            'tipo'   => "required|string|in:{$tipoRouteEnum}",
-            'status' => "nullable|string|in:{$statusRouteEnum}",
+            'tipo'   => 'required|string|in:' . $tipoRouteEnum,
+            'status' => 'nullable|string|in:' . $statusRouteEnum,
 
             'marca'          => 'required|string|max:100',
             'modelo'         => 'required|string|max:100',
@@ -65,5 +65,4 @@ class UpdateVehiclesRequest extends FormRequest
             'errors'  => $validator->errors(),
         ], 422));
     }
-
 }

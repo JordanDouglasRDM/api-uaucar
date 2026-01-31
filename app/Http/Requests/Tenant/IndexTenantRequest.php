@@ -29,7 +29,7 @@ class IndexTenantRequest extends FormRequest
 
         return [
             'per_page'        => 'required|integer|min:1',
-            'order_by'        => "required|string|in:{$in}",
+            'order_by'        => 'required|string|in:' . $in,
             'order_direction' => 'required|string|in:asc,desc',
             'filters'         => 'nullable|array',
             'filters.status'  => 'nullable|in:active,inactive',

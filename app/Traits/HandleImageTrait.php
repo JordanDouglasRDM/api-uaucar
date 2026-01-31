@@ -19,6 +19,7 @@ trait HandleImageTrait
         if (! in_array($name, [null, '', '0'], true)) {
             $name = $name . '.' . $file->getClientOriginalExtension();
         }
+
         $name ??= $file->getClientOriginalName();
         $fullPath = $path . '/' . $name;
 

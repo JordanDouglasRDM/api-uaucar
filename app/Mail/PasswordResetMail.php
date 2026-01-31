@@ -30,7 +30,7 @@ class PasswordResetMail extends Mailable implements ShouldQueue
     public function build(): PasswordResetMail
     {
         $appName = config('app.name');
-        $subject = "Recuperação de Senha - $appName";
+        $subject = 'Recuperação de Senha - ' . $appName;
 
         return $this->view('mail.password-reset')
             ->with([

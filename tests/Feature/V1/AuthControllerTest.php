@@ -33,7 +33,7 @@ class AuthControllerTest extends TestCase
 
     public function testLoginValidoRetornaTokensEStatus200(): void
     {
-        $response = $this->postJson("{$this->baseUrl}/login", [
+        $response = $this->postJson($this->baseUrl . '/login', [
             'email'    => $this->user->email,
             'password' => $this->password,
         ]);
@@ -53,7 +53,7 @@ class AuthControllerTest extends TestCase
 
     public function testLoginComSenhaIncorretaRetorna401(): void
     {
-        $response = $this->postJson("{$this->baseUrl}/login", [
+        $response = $this->postJson($this->baseUrl . '/login', [
             'email'    => $this->user->email,
             'password' => 'senha_errada',
         ]);
@@ -70,7 +70,7 @@ class AuthControllerTest extends TestCase
      */
     public function testRefreshTokenValidoComHttpClient(): void
     {
-        $loginResponse = Http::asJson()->post("{$this->completeUrl}/login", [
+        $loginResponse = Http::asJson()->post($this->completeUrl . '/login', [
             'email'    => $this->user->email,
             'password' => $this->password,
         ]);
@@ -83,7 +83,7 @@ class AuthControllerTest extends TestCase
         $refreshResponse = Http::withCookies([
             'refresh_token' => $cookie->getValue(),
         ], 'localhost')
-            ->post("{$this->completeUrl}/refresh-token");
+            ->post($this->completeUrl . '/refresh-token');
 
         $this->assertEquals(200, $refreshResponse->status());
 
@@ -98,7 +98,7 @@ class AuthControllerTest extends TestCase
     public function testLogoutRevogaRefreshTokenEImpedeReusoDeRefreshTokenRevogado(): void
     {
         // login
-        $loginResponse = Http::asJson()->post("{$this->completeUrl}/login", [
+        $loginResponse = Http::asJson()->post($this->completeUrl . '/login', [
             'email'    => $this->user->email,
             'password' => $this->password,
         ]);
@@ -115,7 +115,7 @@ class AuthControllerTest extends TestCase
 
         $logoutResponse = Http::asJson()
             ->withToken($accessToken)
-            ->post("{$this->completeUrl}/logout", ['device_token' => $deviceToken]);
+            ->post($this->completeUrl . '/logout', ['device_token' => $deviceToken]);
 
         $this->assertEquals(200, $logoutResponse->status(), 'Houve uma falha ao realizar o logout.');
         $this->assertNotEmpty($loginResponse->json('message'));
@@ -124,7 +124,7 @@ class AuthControllerTest extends TestCase
         $refreshResponse = Http::withCookies([
             'refresh_token' => $cookie->getValue(),
         ], 'localhost')
-            ->post("{$this->completeUrl}/refresh-token");
+            ->post($this->completeUrl . '/refresh-token');
 
         $this->assertEquals(401, $refreshResponse->status());
         $this->assertNull($refreshResponse->json('data'));
@@ -138,7 +138,7 @@ class AuthControllerTest extends TestCase
         $refreshResponse = Http::withCookies([
             'refresh_token' => 'token_invalido_teste',
         ], 'localhost')
-            ->post("{$this->completeUrl}/refresh-token");
+            ->post($this->completeUrl . '/refresh-token');
 
         $this->assertEquals(401, $refreshResponse->status());
         $this->assertNotEmpty($refreshResponse->json('message'));
@@ -147,7 +147,7 @@ class AuthControllerTest extends TestCase
 
     public function testAcessoSemTokenRetorna401(): void
     {
-        $response = $this->getJson("{$this->baseUrl}/logged");
+        $response = $this->getJson($this->baseUrl . '/logged');
 
         $response->assertStatus(401);
         $response->assertJsonStructure([
@@ -165,7 +165,7 @@ class AuthControllerTest extends TestCase
     private function loginComUserAgent(string $userAgent = 'Chrome'): array
     {
         $resp = $this->withHeaders(['User-Agent' => $userAgent])
-            ->postJson("{$this->baseUrl}/login", [
+            ->postJson($this->baseUrl . '/login', [
                 'email'    => $this->user->email,
                 'password' => $this->password,
             ]);
@@ -232,7 +232,7 @@ class AuthControllerTest extends TestCase
         // logout global
         $response = $this->withToken($login['access_token'])
             ->withHeaders(['User-Agent' => 'Firefox'])
-            ->postJson("{$this->baseUrl}/logout", [
+            ->postJson($this->baseUrl . '/logout', [
                 'revoke_all_devices' => true,
                 'device_token'       => $login['device_token'], // ok enviar junto; a service primeiro revoga todos
             ]);
@@ -284,7 +284,7 @@ class AuthControllerTest extends TestCase
         // logout apenas do dispositivo atual (envia device_token)
         $response = $this->withToken($loginResponse['access_token'])
             ->withHeaders(['User-Agent' => 'Safari']) // mesmo se o UA aqui casar com outros tokens, a service irá PRIORIZAR device_token
-            ->postJson("{$this->baseUrl}/logout", [
+            ->postJson($this->baseUrl . '/logout', [
                 'revoke_all_devices' => false,
                 'device_token'       => $loginResponse['device_token'],
             ]);
@@ -339,7 +339,7 @@ class AuthControllerTest extends TestCase
         // logout por user-agent: sem device_token → cai no branch do userAgent do request
         $response = $this->withToken($login['access_token'])
             ->withHeaders(['User-Agent' => 'Chrome'])
-            ->postJson("{$this->baseUrl}/logout", [
+            ->postJson($this->baseUrl . '/logout', [
                 'device_token'       => 'device_token_invalido',
                 'revoke_all_devices' => false,
             ]);
@@ -372,7 +372,7 @@ class AuthControllerTest extends TestCase
         $login = $this->loginComUserAgent('Firefox');
 
         $loggedResponse = $this->withToken($login['access_token'])
-            ->getJson("{$this->baseUrl}/logged");
+            ->getJson($this->baseUrl . '/logged');
 
         $loggedResponse->assertStatus(200);
         $loggedResponse->assertJsonStructure([

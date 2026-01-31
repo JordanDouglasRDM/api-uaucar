@@ -77,7 +77,9 @@ class User extends Authenticatable implements Auditable, JWTSubject
 
     public function sendPasswordResetNotification($token): void
     {
-        $domain = $this->tenant->domain === 'localhost' ? 'localhost:5173' : $this->tenant->domain;
+        /** @var Tenant $tenant */
+        $tenant = $this->tenant;
+        $domain = $tenant->domain === 'localhost' ? 'localhost:5173' : $tenant->domain;
         $url    = sprintf(
             '%s://%s/reset-password/%s?%s',
             app()->isProduction() ? 'https' : 'http',
@@ -86,8 +88,8 @@ class User extends Authenticatable implements Auditable, JWTSubject
             http_build_query(['email' => $this->email])
         );
 
-        $logoUrl  = $this->tenant->logo ?? null;
-        $firmName = $this->tenant->name;
+        $logoUrl  = $tenant->logo ?? null;
+        $firmName = $tenant->name;
 
         Mail::to($this->email)->send(new PasswordResetMail(
             $url,

@@ -90,6 +90,9 @@ class AuthService
         }
     }
 
+    /**
+     * @param array<string, mixed> $data
+     */
     public function passwordForgot(array $data): ServiceResponse
     {
         try {
@@ -102,17 +105,20 @@ class AuthService
             }
 
             return ServiceResponse::success(null, 'Foi enviado um e-mail com link de recuperação.');
-        } catch (Exception $e) {
-            return ServiceResponse::error($e);
+        } catch (Exception $exception) {
+            return ServiceResponse::error($exception);
         }
     }
 
+    /**
+     * @param array<string, mixed> $data
+     */
     public function passwordReset(array $data): ServiceResponse
     {
         try {
             $status = $this->broker()->reset(
                 $data,
-                function ($user, $password): void {
+                function (User $user, $password): void {
                     $user   = User::find($user->id);
                     $result = $user->update([
                         'password' => Hash::make($password),
@@ -131,11 +137,14 @@ class AuthService
             }
 
             return ServiceResponse::success(['redirect' => url('login')], 'Senha atualizada com sucesso, realize o login.');
-        } catch (Exception $e) {
-            return ServiceResponse::error($e);
+        } catch (Exception $exception) {
+            return ServiceResponse::error($exception);
         }
     }
 
+    /**
+     * @param array<string, mixed> $data
+     */
     public function updatePassword(array $data): ServiceResponse
     {
         try {

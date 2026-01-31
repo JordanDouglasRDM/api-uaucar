@@ -26,7 +26,7 @@ class Authenticate
     {
         $guard = $guards[0] ?? 'api';
         $auth  = Auth::guard($guard);
-        /** @var Tenant $tenant*/
+        /** @var Tenant|null $tenant*/
         $tenant = $request->attributes->get('tenant');
 
         try {

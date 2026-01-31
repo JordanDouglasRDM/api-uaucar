@@ -5,10 +5,10 @@ declare(strict_types = 1);
 namespace App\Http\Requests\Vehicles;
 
 use App\Models\Vehicle;
-use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Contracts\Validation\Validator;
+use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Http\Exceptions\HttpResponseException;
 use Override;
 
 class GetAllVehiclesRequest extends FormRequest
@@ -34,7 +34,7 @@ class GetAllVehiclesRequest extends FormRequest
 
         return [
             'per_page'        => 'required|integer|min:1',
-            'order_by'        => "required|string|in:{$in}",
+            'order_by'        => 'required|string|in:' . $in,
             'order_direction' => 'required|string|in:asc,desc',
             'filters'         => 'nullable|array',
             'filters.status'  => 'nullable|string|in:' . implode(',', Vehicle::statusRouteEnum()),
@@ -42,6 +42,7 @@ class GetAllVehiclesRequest extends FormRequest
             'filters.search'  => 'nullable|string|max:255',
         ];
     }
+
     #[Override]
     protected function failedValidation(Validator $validator)
     {

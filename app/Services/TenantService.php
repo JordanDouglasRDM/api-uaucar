@@ -7,17 +7,22 @@ namespace App\Services;
 use App\Http\Resources\TenantResource;
 use App\Http\Utilities\ServiceResponse;
 use App\Repositories\TenantRepository;
+use App\Traits\HandleImageTrait;
 use App\Traits\HelperTrait;
 use Throwable;
 
 class TenantService
 {
     use HelperTrait;
+    use HandleImageTrait;
 
     public function __construct(protected TenantRepository $repository)
     {
     }
 
+    /**
+     * @param array<string, mixed> $data
+     */
     public function index(array $data): ServiceResponse
     {
         try {
@@ -27,8 +32,8 @@ class TenantService
             $result      = $this->toPaginator($result, $resultItems);
 
             return ServiceResponse::success($result, $message);
-        } catch (Throwable $e) {
-            return ServiceResponse::error($e);
+        } catch (Throwable $throwable) {
+            return ServiceResponse::error($throwable);
         }
     }
 }

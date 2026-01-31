@@ -14,7 +14,8 @@ class VehicleRepository
     {
     }
 
-    /** * @param array<string, mixed> $filters
+    /**
+     * @param array<string, mixed> $data
      * @return LengthAwarePaginator<int, Vehicle>
      */
     public function getAll(array $data): LengthAwarePaginator

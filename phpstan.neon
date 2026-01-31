@@ -13,3 +13,5 @@ parameters:
             - '#Call to an undefined static method Tymon\\JWTAuth\\Facades\\JWTAuth::encode#'
             - '#should return Illuminate\\Database\\Eloquent\\Relations\\BelongsTo<.+> but returns Illuminate\\Database\\Eloquent\\Relations\\BelongsTo<.+>#'
             - '#uses generic trait Illuminate\\Database\\Eloquent\\Factories\\HasFactory but does not specify its types#'
+            - '#Method .+::.+\(\) return type with generic class Illuminate\\Database\\Eloquent\\Relations\\HasMany does not specify its types#'
+            - '#Method .+::.+\(\) return type with generic class Illuminate\\Database\\Eloquent\\Relations\\BelongsTo does not specify its types#'

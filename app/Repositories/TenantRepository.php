@@ -28,6 +28,10 @@ class TenantRepository
     //        'created_at',
     //        'updated_at',
 
+    /**
+     * @param array<string, mixed> $data
+     * @return LengthAwarePaginator<int, Tenant>
+    */
     public function index(array $data): LengthAwarePaginator
     {
         $query = $this->model->query();
