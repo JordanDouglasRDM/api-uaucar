@@ -27,7 +27,8 @@ Route::prefix('v1')
         });
         Route::middleware(['auth:api', 'can:manage-system'])->group(function (): void {
             Route::resource('tenants', TenantController::class)
-                ->except(['create', 'edit']);
+                ->except(['create', 'edit', 'update']);
+            Route::post('/tenants/{tenant}', [TenantController::class, 'update']);
         });
 
         Route::middleware(['auth:api', 'can:operate-stock'])->group(function (): void {

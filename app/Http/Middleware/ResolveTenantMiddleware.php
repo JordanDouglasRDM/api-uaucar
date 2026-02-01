@@ -9,10 +9,11 @@ use App\Models\Tenant;
 use Closure;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 
 class ResolveTenantMiddleware
 {
-    public function handle(Request $request, Closure $next): JsonResponse
+    public function handle(Request $request, Closure $next): JsonResponse | Response
     {
         $tenant = Tenant::where('domain', $request->getHost())->first();
 
